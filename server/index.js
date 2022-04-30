@@ -1,5 +1,7 @@
 const express = require("express");
 const { MongoClient, ServerApiVersion } = require('mongodb');
+const bodyParser = require('body-parser')
+const jsonParser = bodyParser.json()
 
 const PORT = process.env.PORT || 3001;
 
@@ -13,7 +15,7 @@ const client = new MongoClient(mongo_uri, { useNewUrlParser: true, useUnifiedTop
 //   const orders = client.db("inventory").collection("orders");
 //   const products = client.db("inventory").collection("products");
 //   // perform actions on the collection object
-//   client.close();
+//    
 // });
 
 app.get("/api", (req, res) => {
@@ -25,10 +27,11 @@ app.get("/customers", (req, res) => {
     client.connect(async err => {
         const customers = client.db("inventory").collection("customers");
         await customers.find({}).toArray((err, docs) => {
+            if (err) throw err;
             console.log(docs);
             res.json(docs);
         });
-        client.close();
+         
     });   
 });
 
@@ -41,7 +44,7 @@ app.get("/orders", (req, res) => {
         });
         console.log(docs);
         res.json(docs);
-        client.close();
+         
     });   
 });
 
@@ -53,12 +56,26 @@ app.get("/products", (req, res) => {
             console.log(docs);
             res.json(docs);
         });
-        client.close();
+         
     });
 });
 
-app.post("/update_products", (req, res) => {
-
+app.post("/update_products", jsonParser, function (req, res) {
+    // Update the quantity of a product
+    console.log(req.body);
+    client.connect(async err => {
+        const products = client.db("inventory").collection("products");
+        console.log(" > Updating product quantity");
+        const resp = await products.updateOne({
+            product_id: req.body.product_id
+        }, {
+            $set: {
+                qty: req.body.quantity
+            }
+        });
+        console.log(resp);
+        res.json({status: 200, acknowledged: resp.acknowledged});
+    });
 });
 
 app.listen(PORT, () => {
