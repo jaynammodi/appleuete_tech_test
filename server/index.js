@@ -21,6 +21,7 @@ app.get("/api", (req, res) => {
 });
 
 app.get("/customers", (req, res) => {
+    // Get a list of all customers
     client.connect(async err => {
         const customers = client.db("inventory").collection("customers");
         await customers.find({}).toArray((err, docs) => {
@@ -29,7 +30,36 @@ app.get("/customers", (req, res) => {
         });
         client.close();
     });   
-})
+});
+
+app.get("/orders", (req, res) => {
+    // Get a list of all orders for a particular customer
+    client.connect(async err => {
+        const orders = client.db("inventory").collection("orders");
+        const docs = await orders.findOne({
+            customer_id: req.query.customer_id
+        });
+        console.log(docs);
+        res.json(docs);
+        client.close();
+    });   
+});
+
+app.get("/products", (req, res) => {
+    // Get a list of all products
+    client.connect(async err => {
+        const products = client.db("inventory").collection("products");
+        await products.find({}).toArray((err, docs) => {
+            console.log(docs);
+            res.json(docs);
+        });
+        client.close();
+    });
+});
+
+app.post("/update_products", (req, res) => {
+
+});
 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
