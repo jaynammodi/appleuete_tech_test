@@ -1,0 +1,145 @@
+  [{
+    product_id: '4460755157060',
+    product_name: 'Product C',
+    qty: Long("150"),
+    sku: 'pc357060'
+  },
+  {
+    product_id: '4460755157061',
+    product_name: 'Product D',
+    qty: Long("100"),
+    sku: 'pd457061'
+
+  },
+  {
+    product_id: '4460755157062',
+    product_name: 'Product E',
+    qty: Long("50"),
+    sku: 'pe557062'
+  },
+  {
+    product_id: '4460755157063',
+    product_name: 'Product F',
+    qty: Long("30"),
+    sku: 'pf657063'
+
+  },
+  {
+    product_id: '4460755157064',
+    product_name: 'Product G',
+    qty: Long("20"),
+    sku: 'pg757064'
+  },
+    {
+        product_id: '4460755157065',
+        product_name: 'Product H',
+        qty: Long("450"),
+        sku: 'ph857065'
+    },
+    {
+        product_id: '4460755157066',
+        product_name: 'Product I',
+        qty: Long("500"),
+        sku: 'pi957066'
+    },
+    {
+        product_id: '4460755157067',
+        product_name: 'Product J',
+        qty: Long("340"),
+        sku: 'pja57067'
+    }]
+
+    [
+        {
+            order_id: '40482022041',
+            customer_id: 'A202204048',
+            order_date: '2019-01-01',
+            status: 'Pending',
+            products: [{
+                    product_id: '4460755157060',
+                    qty: Long("5"),
+                    sku: 'pc357060'
+                },
+                {
+                    product_id: '4460755157061',
+                    qty: Long("10"),
+                    sku: 'pd457061'
+                }
+            ]
+        },
+        {
+            order_id: '40502022041',
+            customer_id: 'A202204050',
+            order_date: '2019-01-02',
+            status: 'Pending',
+            products: [{
+                    product_id: '4460755157062',
+                    qty: Long("15"),
+                    sku: 'pe557062'
+                },
+                {
+                    product_id: '4460755157063',
+                    qty: Long("10"),
+                    sku: 'pf657063'
+                }
+            ]
+        },
+        {
+            order_id: '40482022042',
+            customer_id: 'A202204048',
+            order_date: '2019-01-03',
+            status: 'Pending',
+            products: [{
+                    product_id: '4460755157064',
+                    qty: Long("25"),
+                    sku: 'pg757064'
+                },
+                {
+                    product_id: '4460755157065',
+                    qty: Long("20"),
+                    sku: 'ph857065'
+                }
+            ]
+        },
+        {
+            order_id: '40492022041',
+            customer_id: 'A202204049',
+            order_date: '2019-01-04',
+            status: 'Pending',
+            products: [{
+                    product_id: '4460755157066',
+                    qty: Long("5"),
+                    sku: 'pi957066'
+                },
+                {
+                    product_id: '4460755157067',
+                    qty: Long("10"),
+                    sku: 'pja57067'
+                }
+            ]
+        }
+    ]
+
+    [
+        {
+            customer_id: 'A202204048',
+            customer_name: 'Ajay',
+            customer_address: 'Bangalore',
+            customer_phone: '9888888888',
+            orders: ['40482022041', '40482022042']
+        },
+        {
+            customer_id: 'A202204049',
+            customer_name: 'Ketan',
+            customer_address: 'Mumbai',
+            customer_phone: '9888888889',
+            orders: ['40492022041']
+        },
+        {
+            customer_id: 'A202204050',
+            customer_name: 'Suresh',
+            customer_address: 'Surat',
+            customer_phone: '9888888810',
+            orders: ['40502022041']
+        }
+    ]
