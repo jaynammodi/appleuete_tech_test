@@ -77,6 +77,21 @@ app.get("/products", (req, res) => {
     });
 });
 
+app.get("/product", (req, res) => {
+    // Get all details of a product
+    client.connect(async err => {
+        const products = client.db("inventory").collection("products");
+        await products.find({product_id: req.query.pid}).toArray((err, docs) => {
+             // console.log(docs);
+            res.json(docs);
+        });
+        if (err) {
+            res.status(500);
+            throw err;
+        }
+    });
+});
+
 app.post("/update_products", jsonParser, function (req, res) {
     // Update the quantity of a product
     // console.log(req.body);

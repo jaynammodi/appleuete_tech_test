@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server/index.js"
+    "start": "concurrently \"node ./server/index.js\" \"cd client && npm start\""
   },
   "author": "Jaynam Modi",
   "license": "ISC",
@@ -13,6 +13,11 @@
     "body-parser": "^1.20.0",
     "express": "^4.18.1",
     "g": "^2.0.1",
-    "mongodb": "^4.5.0"
+    "material-ui": "^0.20.2",
+    "mongodb": "^4.5.0",
+    "react-router-dom": "^6.3.0"
+  },
+  "devDependencies": {
+    "concurrently": "^7.1.0"
   }
 }
