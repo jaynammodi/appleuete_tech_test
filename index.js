@@ -2,6 +2,7 @@ const express = require("express");
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
+const path = require('path');
 
 const PORT = process.env.PORT || 3001;
 
