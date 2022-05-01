@@ -14,22 +14,24 @@ import Grid from '@material-ui/core/Grid';
 import Typography from "@material-ui/core/Typography";
 import EditIcon from '@material-ui/icons/Edit';
 import { Card, CardActionArea, CardContent, Input } from "@material-ui/core";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import Divider from "@mui/material/Divider";
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: "100%",
-    marginTop: theme.spacing(3),
-    overflowX: "auto"
+    width: 100,
+    margin: theme.spacing(3),
+    justifyContent: "center",
+    alignItems: "center",
+    overflowX: "auto",
+    overflowY: "auto"
   },
   table: {
-    minWidth: 650
   },
   selectTableCell: {
-    width: 60
   },
   tableCell: {
-    width: 130,
-    height: 40
   },
   input: {
     width: 130,
@@ -37,11 +39,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const createOrder = (id, name, qty, sku) => ({
-    product_id: id, 
-    product_name: name,
-    qty: qty,
-    sku: sku,
+const createOrder = (order_id, customer_id, order_date, status, productids, products) => ({
+    order_id: order_id, 
+    customer_id: customer_id,
+    order_date: order_date,
+    status: status,
+    productids: productids,
+    products:  products,
     isEditMode: false
 });
 
@@ -58,34 +62,44 @@ class Orders extends Component{
     constructor(){
         super();
         this.state = { 
-            products: [],
+            orders: [],
             editModal: {
                 status: false,
                 id: 0
             },
-            curProduct: {},
-            newQty: 0
+            curOrder: {},
+            newStatus: "",
+            curProd: {},
+            newQty: 0,
+            newProds:[],
         };
     }
     componentDidMount(){
-        fetch('/products')
+        fetch('/orders')
             .then(res => {
                 console.log(res);
                 return res.json()
              })
             .then(rows => { 
-                var prod = [];
+                var ord = [];
                 console.log(rows);
                 rows.forEach(row => {
                     console.log(row);
-                    prod.push(createProduct(row.product_id, row.product_name, row.qty, row.sku));
+                    var prodids = [];
+                    var prods = [];
+                    row.products.forEach(prod => {
+                        prodids.push(prod.product_id);
+                        prods.push(prod);
+                    });
+                    ord.push(createOrder(row.order_id, row.customer_id, row.order_date, row.status, prodids, prods));
                 });
-                this.setState({ products: prod });
+                this.setState({ orders: ord });
              });
     }
     
     render(){
       const { classes } = this.props;
+      var products_clone = this.state.curOrder.products;
         return (
             <Paper className={classes.root}>
                 <Modal
@@ -100,7 +114,8 @@ class Orders extends Component{
                             justifyContent: 'center',
                             height: '100%',
                         }}>
-                            <Card elevation={8} minWidth='30vw'>
+                            {(this.state.editModal.status) ? <>
+                            <Card elevation={8} style={{overflow: 'scroll', maxHeight: '80%'}}>
                             <CardActionArea>
                                 <CardContent>
                                 <div style={{
@@ -112,12 +127,12 @@ class Orders extends Component{
                                     <Grid container spacing={3}>
                                         <Grid item xs={12}>
                                             <Typography id="modal-modal-title" variant="h6" component="h2">
-                                            Edit Product Details
+                                            Edit Order Details
                                             </Typography>
                                         </Grid>
                                         <Grid item xs={6}>
                                             <Typography variant="h6" component="h2">
-                                                Product ID
+                                                Order ID
                                             </Typography>
                                         </Grid>
                                         <Grid item xs={6}>
@@ -125,42 +140,97 @@ class Orders extends Component{
                                         </Grid>
                                         <Grid item xs={6}>
                                             <Typography variant="h6" component="h2">
-                                                Product Name
+                                                Customer ID
                                             </Typography>
                                         </Grid>
                                         <Grid item xs={6}>
-                                            <Input disabled value={this.state.curProduct.product_name}/>
+                                            <Input disabled value={this.state.curOrder.customer_id}/>
                                         </Grid>
                                         <Grid item xs={6}>
                                             <Typography variant="h6" component="h2">
-                                                Quantity
+                                                Order Date
                                             </Typography>
                                         </Grid>
                                         <Grid item xs={6}>
-                                            <Input defaultValue={this.state.curProduct.qty} onChange={e => this.setState({newQty: parseInt(e.target.value)})}/>
+                                            <Input disabled value={this.state.curOrder.order_date}/>
                                         </Grid>
                                         <Grid item xs={6}>
                                             <Typography variant="h6" component="h2">
-                                                SKU
+                                                Status
                                             </Typography>
                                         </Grid>
                                         <Grid item xs={6}>
-                                            <Input disabled value={this.state.curProduct.sku}/>
+                                            <Select
+                                                id="demo-simple-select"
+                                                onChange={(e) => {
+                                                    this.setState({newStatus: e.target.value});
+                                                }}
+                                                defaultValue={this.state.curOrder.status}
+                                                label="Status"
+                                                autoWidth
+                                            >
+                                                <MenuItem value='Pending'>Pending</MenuItem>
+                                                <MenuItem value='Delivered'>Delivered</MenuItem>
+                                                <MenuItem value='Cancelled'>Cancelled</MenuItem>
+                                            </Select>
                                         </Grid>
+                                        <Grid item xs={12}>
+                                            <Divider light />
+                                            <Typography variant="h6" component="h2">
+                                                Product Details
+                                            </Typography>
+                                            <Divider light />
+                                        </Grid>
+                                        {this.state.curOrder.products.map(ordered_product => {
+                                            return (
+                                                <>
+                                                <Grid item xs={6}>
+                                                    <Typography variant="h6" component="h2">
+                                                        Product ID
+                                                    </Typography>
+                                                </Grid>
+                                                <Grid item xs={6}>
+                                                    <Input disabled value={ordered_product.product_id}/>    
+                                                </Grid>
+                                                <Grid item xs={6}>
+                                                    <Typography variant="h6" component="h2">
+                                                        SKU
+                                                    </Typography>
+                                                </Grid>
+                                                <Grid item xs={6}>
+                                                    <Input disabled value={ordered_product.sku}/>    
+                                                </Grid>
+                                                <Grid item xs={6}>
+                                                    <Typography variant="h6" component="h2">
+                                                        Quantity
+                                                    </Typography>
+                                                </Grid>
+                                                <Grid item xs={6}>
+                                                    <Input defaultValue={ordered_product.qty} onChange={(e) => {
+                                                        products_clone[this.state.curOrder.products.indexOf(ordered_product)].qty = e.target.value;
+                                                        this.setState({newProds: products_clone});
+                                                    }}/>    
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    <Divider light />
+                                                </Grid>
+                                                </>
+                                            );
+                                        })}
                                         <Grid item xs={6}>
                                             <Button size='small' color='primary' onClick={() => {
                                                 const requestOptions = {
                                                     method: 'POST',
                                                     headers: { 'Content-Type': 'application/json' },
-                                                    body: JSON.stringify({ product_id: this.state.curProduct.product_id, quantity: this.state.newQty })
+                                                    body: JSON.stringify({ order_id: this.state.curOrder.order_id, status: (this.state.newStatus !== "" ? this.state.newStatus : this.state.curOrder.status), products: (this.state.newProds.length !== 0 ? this.state.newProds : this.state.curOrder.products) })
                                                 };
-                                                fetch('/update_products', requestOptions)
-                                                this.setState({editModal: {id: 0, status: false}, curProduct: {}, newQty: 0});
+                                                fetch('/update_order', requestOptions)
+                                                this.setState({editModal: {id: 0, status: false}, curOrder: {}, newQty: 0,  newStatus: "", curProd: {}, newProds:[]});
                                                 window.location.reload();
                                             }}>Update Values</Button>
                                         </Grid>
                                         <Grid item xs={6}>
-                                            <Button size='small' color='primary' onClick={() => { this.setState({editModal: {id: 0, status: false}, curProduct: {}, newQty: 0})}}>Cancel</Button>
+                                            <Button size='small' color='primary' onClick={() => { this.setState({editModal: {id: 0, status: false}, curOrder: {}, newQty: 0,  newStatus: "", curProd: {}, newProds:[]})}}>Cancel</Button>
                                         </Grid>
                                     </Grid>
                                 </div>
@@ -169,29 +239,32 @@ class Orders extends Component{
                                 </CardActions> */}
                             </CardActionArea>
                             </Card>
+                            </> : <></>}
                         </div>
                 </Modal>
             <Table className={classes.table} aria-label="caption table">
-              <caption>A barbone structure table example with a caption</caption>
+              <caption>Open Edit Modal for more Information regarding the orders and to edit Order Status & Product Quantities</caption>
               <TableHead>
                 <TableRow>
-                  <TableCell align="left">Product ID</TableCell>
-                  <TableCell align="left">Product Name</TableCell>
-                  <TableCell align="left">Quantity</TableCell>
-                  <TableCell align="left">SKU</TableCell>
-                  <TableCell align="left">Edit</TableCell>
+                    <TableCell align="left"><b>Order ID</b></TableCell>
+                    <TableCell align="left"><b>Customer ID</b></TableCell>
+                    <TableCell align="left"><b>Order Date</b></TableCell>
+                    <TableCell align="left"><b>Status</b></TableCell>
+                    <TableCell align="left"><b>Products</b></TableCell>
+                    <TableCell align="left"><b>Edit</b></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                { this.state.products.map(row => (
-                  <TableRow key={row.product_id}>
-                    <CustomTableCell {...{ row, name: "product_id" }} />
-                    <CustomTableCell {...{ row, name: "product_name" }} />
-                    <CustomTableCell {...{ row, name: "qty" }} />
-                    <CustomTableCell {...{ row, name: "sku" }} />
+                { this.state.orders.map(row => (
+                  <TableRow key={row.order_id}>
+                    <CustomTableCell {...{ row, name: "order_id"} } />
+                    <CustomTableCell {...{ row, name: "customer_id"} } />
+                    <CustomTableCell {...{ row, name: "order_date"} } />
+                    <CustomTableCell {...{ row, name: "status"} } />
+                    <CustomTableCell {...{ row, name: "productids"} } />
                     <TableCell align="left"><IconButton onClick={() => {
-                        console.log(row.product_id);
-                        this.setState({ editModal: { status: true, id: row.product_id }, curProduct: row });
+                        console.log(row.products);
+                        this.setState({ editModal: { status: true, id: row.order_id }, curOrder: row });
                     }}><EditIcon /></IconButton></TableCell>
                   </TableRow>
                 ))}
@@ -202,4 +275,4 @@ class Orders extends Component{
     }
 }
 
-export default withStyles(useStyles)(Products);
+export default withStyles(useStyles)(Orders);

@@ -7,22 +7,23 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import { Link } from "react-router-dom";
+import InfoIcon from '@mui/icons-material/Info';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: "100%",
-    marginTop: theme.spacing(3),
-    overflowX: "auto"
+    width: 100,
+    margin: theme.spacing(3),
+    justifyContent: "center",
+    alignItems: "center",
+    overflowX: "auto",
+    overflowY: "auto"
   },
   table: {
-    minWidth: 650
   },
   selectTableCell: {
-    width: 60
   },
   tableCell: {
-    width: 130,
-    height: 40
   },
   input: {
     width: 130,
@@ -82,11 +83,12 @@ class Customers extends Component{
               <caption>A barbone structure table example with a caption</caption>
               <TableHead>
                 <TableRow>
-                  <TableCell align="left">Customer ID</TableCell>
-                  <TableCell align="left">Customer Name</TableCell>
-                  <TableCell align="left">Address</TableCell>
-                  <TableCell align="left">Phone</TableCell>
-                  <TableCell align="left">Orders</TableCell>
+                  <TableCell align="left"><b>Customer ID</b></TableCell>
+                  <TableCell align="left"><b>Customer Name</b></TableCell>
+                  <TableCell align="left"><b>Address</b></TableCell>
+                  <TableCell align="left"><b>Phone</b></TableCell>
+                  <TableCell align="left"><b>Orders</b></TableCell>
+                  <TableCell align="left"><b>More Info</b></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -97,6 +99,11 @@ class Customers extends Component{
                     <CustomTableCell {...{ row, name: "customer_address" }} />
                     <CustomTableCell {...{ row, name: "customer_phone" }} />
                     <CustomTableCell {...{ row, name: "orders" }} />
+                    <TableCell align="left">
+                      <Link to={{ pathname: "/customer_orders?id=" + row.customer_id }}>
+                          <InfoIcon/>
+                      </Link>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

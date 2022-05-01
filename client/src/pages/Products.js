@@ -17,12 +17,12 @@ import { Card, CardActionArea, CardContent, Input } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: "100%",
-    marginTop: theme.spacing(3),
-    overflowX: "auto"
-  },
-  table: {
-    minWidth: 650
+    width: 100,
+    margin: theme.spacing(3),
+    justifyContent: "center",
+    alignItems: "center",
+    overflowX: "auto",
+    overflowY: "auto"
   },
   selectTableCell: {
     width: 60
@@ -46,9 +46,8 @@ const createProduct = (id, name, qty, sku) => ({
 });
 
 const CustomTableCell = ({ row, name, onChange }) => {
-  const classes = useStyles();
   return (
-    <TableCell align="left" className={classes.tableCell}>
+    <TableCell align="left">
         {row[name].toString()}
     </TableCell>
   );
@@ -171,15 +170,15 @@ class Products extends Component{
                             </Card>
                         </div>
                 </Modal>
-            <Table className={classes.table} aria-label="caption table">
-              <caption>A barbone structure table example with a caption</caption>
+            <Table aria-label="caption table">
+              <caption>List of all Products, Quantity is Editable</caption>
               <TableHead>
                 <TableRow>
-                  <TableCell align="left">Product ID</TableCell>
-                  <TableCell align="left">Product Name</TableCell>
-                  <TableCell align="left">Quantity</TableCell>
-                  <TableCell align="left">SKU</TableCell>
-                  <TableCell align="left">Edit</TableCell>
+                  <TableCell align="left"><b>Product ID</b></TableCell>
+                  <TableCell align="left"><b>Product Name</b></TableCell>
+                  <TableCell align="left"><b>Quantity</b></TableCell>
+                  <TableCell align="left"><b>SKU</b></TableCell>
+                  <TableCell align="left"><b>Edit</b></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

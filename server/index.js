@@ -31,6 +31,8 @@ app.get("/customers", (req, res) => {
 });
 
 app.get("/order", (req, res) => {
+    console.log("client");
+    console.log(req.query.customer_id);
     // Get a list of all orders for a particular customer
     client.connect(async err => {
         const orders = client.db("inventory").collection("orders");
@@ -116,15 +118,16 @@ app.post("/update_products", jsonParser, function (req, res) {
 
 app.post("/update_order", jsonParser, function (req, res) {
     // Update the status of an order
-     // console.log(req.body);
+     console.log(req.body);
     client.connect(async err => {
         const orders = client.db("inventory").collection("orders");
          // console.log(" > Updating product quantity");
-        const resp = await products.updateOne({
+        const resp = await orders.updateOne({
             order_id: req.body.order_id
         }, {
             $set: {
-                status: req.body.status
+                status: req.body.status,
+                products: req.body.products,
             }
         });
         if (err) {
