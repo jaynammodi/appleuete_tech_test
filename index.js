@@ -11,10 +11,6 @@ const app = express();
 const mongo_uri = "mongodb+srv://admin:helloworld@appleuete-tech.tep0u.mongodb.net/appleute-tech?retryWrites=true&w=majority";
 const client = new MongoClient(mongo_uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname+'/client/build/index.html'));
-  });
-
 app.get("/api", (req, res) => {
     res.json({status: 200, message: "Hello World"});
 });
@@ -142,6 +138,24 @@ app.post("/api/update_order", jsonParser, function (req, res) {
          // console.log(resp);
         res.json({status: 200, acknowledged: resp.acknowledged, matchedCount: resp.matchedCount, modifiedCount: resp.modifiedCount});
     });
+});
+
+app.use(express.static(path.join(__dirname, 'client/build')));
+
+app.get('/customers', (req, res) => {
+  res.sendFile(path.join(__dirname+'/client/build/index.html'));
+});
+app.get('/orders', (req, res) => {
+  res.sendFile(path.join(__dirname+'/client/build/index.html'));
+});
+app.get('/products', (req, res) => {
+  res.sendFile(path.join(__dirname+'/client/build/index.html'));
+});
+app.get('/customer_orders', (req, res) => {
+  res.sendFile(path.join(__dirname+'/client/build/index.html'));
+});
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname+'/client/build/index.html'));
 });
 
 app.listen(PORT, () => {
