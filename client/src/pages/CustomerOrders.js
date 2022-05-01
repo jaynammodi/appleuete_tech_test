@@ -79,7 +79,7 @@ class CustomerOrders extends Component{
     async componentDidMount(){
         let queryId = queryParams.get("id");
         console.log(queryId);
-        await fetch('/order?customer_id=' + queryId)
+        await fetch('/api/order?customer_id=' + queryId)
             .then(res => {
                 console.log(res);
                 return res.json()
@@ -231,7 +231,7 @@ class CustomerOrders extends Component{
                                                     headers: { 'Content-Type': 'application/json' },
                                                     body: JSON.stringify({ order_id: this.state.curOrder.order_id, status: (this.state.newStatus !== "" ? this.state.newStatus : this.state.curOrder.status), products: (this.state.newProds.length !== 0 ? this.state.newProds : this.state.curOrder.products) })
                                                 };
-                                                fetch('/update_order', requestOptions)
+                                                fetch('/api/update_order', requestOptions)
                                                 this.setState({editModal: {id: 0, status: false}, curOrder: {}, newQty: 0,  newStatus: "", curProd: {}, newProds:[]});
                                                 window.location.reload();
                                             }}>Update Values</Button>

@@ -57,7 +57,7 @@ class Customers extends Component{
         };
     }
     componentDidMount(){
-        fetch('/customers')
+        fetch('/api/customers')
             .then(res => {
                 console.log(res);
                 return res.json()

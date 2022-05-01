@@ -67,7 +67,7 @@ class Products extends Component{
         };
     }
     componentDidMount(){
-        fetch('/products')
+        fetch('/api/products')
             .then(res => {
                 console.log(res);
                 return res.json()
@@ -153,7 +153,7 @@ class Products extends Component{
                                                     headers: { 'Content-Type': 'application/json' },
                                                     body: JSON.stringify({ product_id: this.state.curProduct.product_id, quantity: this.state.newQty })
                                                 };
-                                                fetch('/update_products', requestOptions)
+                                                fetch('/api/update_products', requestOptions)
                                                 this.setState({editModal: {id: 0, status: false}, curProduct: {}, newQty: 0});
                                                 window.location.reload();
                                             }}>Update Values</Button>

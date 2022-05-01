@@ -3,18 +3,22 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
 
-const PORT = process.env.PORT || 3001;
+const PORT = 3001;
 
 const app = express();
 
 const mongo_uri = "mongodb+srv://admin:helloworld@appleuete-tech.tep0u.mongodb.net/appleute-tech?retryWrites=true&w=majority";
 const client = new MongoClient(mongo_uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname+'/client/build/index.html'));
+  });
+
 app.get("/api", (req, res) => {
     res.json({status: 200, message: "Hello World"});
 });
 
-app.get("/customers", (req, res) => {
+app.get("/api/customers", (req, res) => {
     // Get a list of all customers
     client.connect(async err => {
         const customers = client.db("inventory").collection("customers");
@@ -30,7 +34,7 @@ app.get("/customers", (req, res) => {
     });   
 });
 
-app.get("/order", (req, res) => {
+app.get("/api/order", (req, res) => {
     console.log("client");
     console.log(req.query.customer_id);
     // Get a list of all orders for a particular customer
@@ -49,7 +53,7 @@ app.get("/order", (req, res) => {
     });   
 });
 
-app.get("/orders", (req, res) => {
+app.get("/api/orders", (req, res) => {
     // Get a list of all orders
     client.connect(async err => {
         const orders = client.db("inventory").collection("orders");
@@ -64,7 +68,7 @@ app.get("/orders", (req, res) => {
     });   
 });
 
-app.get("/products", (req, res) => {
+app.get("/api/products", (req, res) => {
     // Get a list of all products
     client.connect(async err => {
         const products = client.db("inventory").collection("products");
@@ -79,7 +83,7 @@ app.get("/products", (req, res) => {
     });
 });
 
-app.get("/product", (req, res) => {
+app.get("/api/product", (req, res) => {
     // Get all details of a product
     client.connect(async err => {
         const products = client.db("inventory").collection("products");
@@ -94,7 +98,7 @@ app.get("/product", (req, res) => {
     });
 });
 
-app.post("/update_products", jsonParser, function (req, res) {
+app.post("/api/update_products", jsonParser, function (req, res) {
     // Update the quantity of a product
     // console.log(req.body);
     client.connect(async err => {
@@ -116,7 +120,7 @@ app.post("/update_products", jsonParser, function (req, res) {
     });
 });
 
-app.post("/update_order", jsonParser, function (req, res) {
+app.post("/api/update_order", jsonParser, function (req, res) {
     // Update the status of an order
      console.log(req.body);
     client.connect(async err => {
